@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Financial Report</h2>
+
+        <!-- Download Buttons -->
+        <div class="mb-4">
+            <a href="{{ url_for('download_file', filename=pivot_filename) }}" class="btn btn-success mr-2">Download Pivot Data (CSV)</a>
+            <a href="{{ url_for('download_file', filename=df_filename) }}" class="btn btn-primary">Download Original Data (CSV)</a>
+        </div>
+
+        <!-- Data Table -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Credit Match Status</th>
+                    <th>Debit Match Status</th>
+                    <th>Total Credit</th>
+                    <th>Total Debit</th>
+                    <th>Last Balance</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in pivot_data %}
+                <tr>
+                    <td>{{ row['Month'] }}</td>
+                    <td>
+                        {% if row['Credit Match Status'] %}
+                            <span class="badge badge-success">Matched</span>
+                        {% else %}
+                            <span class="badge badge-danger">Not Matched</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if row['Debit Match Status'] %}
+                            <span class="badge badge-success">Matched</span>
+                        {% else %}
+                            <span class="badge badge-danger">Not Matched</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ row['Credit'] }}</td>
+                    <td>{{ row['Debit'] }}</td>
+                    <td>{{ row['Last Balance'] }}</td>
+                    <td>
+                        <a href="{{ url_for('show_charts', month=row['Month']) }}" class="btn btn-info btn-sm">View Charts</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Back to Upload</a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
